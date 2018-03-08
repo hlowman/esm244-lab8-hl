@@ -59,3 +59,41 @@ leaflet(oil_sf) %>%
 
 ```
 
+# Tmap plot with the Texas state shapefile
+
+```{r tmap}
+
+states <- st_read(dsn = ".", layer = "states" ) #???
+
+tex_border <- states %>% # From the states shapefile in our folder.
+  filter(STATE_NAME == "Texas") %>%  # Filter out only the state of Texas.
+  st_transform(4326) # Coordinate reference system.
+
+plot(tex_border)
+
+tm_shape(tex_border) + # Create a map using tmap.
+  tm_polygons() + # Plot the TX border as a polygon.
+  tm_shape(oil_sf) + # Add in oil spill points from above.
+  tm_dots(size = 0.3) # Edits size of points.
+
+```
+
+# Convert the data to spatial points patterns (combination of the point data and the bounding window)
+
+```{r point_pattern}
+
+spill_spatial <- as(oil_sf, "Spatial") # Converting from simple features back to a data frame.
+spill_ppp <- as(spill_spatial, "ppp") # Convert the new data frame to a point pattern.
+
+tx_sp <- as(tex_border, "Spatial") # Convert texas border data back into a data frame.
+tx_owin <-as(tx_sp, "owin") # Sets the TX boundary as the window.
+
+all_ppp <- ppp(spill_ppp$x, spill_ppp$y, window = tx_owin) # Omits points that don't align between the points pattern and the window we define.
+
+```
+
+
+
+
+
+

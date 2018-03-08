@@ -40,7 +40,7 @@ ggplot(df, aes(x = Year, y = Loss)) +
 
 ```
 
-# Leaflet plot of spill locations in TX in 2016
+# Leaflet plot of spill locations in TX in 2016.
 
 ```{r leaflet}
 
@@ -59,11 +59,11 @@ leaflet(oil_sf) %>%
 
 ```
 
-# Tmap plot with the Texas state shapefile
+# Tmap plot with the Texas state shapefile and oil spills as points.
 
 ```{r tmap}
 
-states <- st_read(dsn = ".", layer = "states" ) #???
+states <- st_read(dsn = ".", layer = "states" ) # The period refers to items in your working directory that contain the name "states" and sets all those files to something called "states".
 
 tex_border <- states %>% # From the states shapefile in our folder.
   filter(STATE_NAME == "Texas") %>%  # Filter out only the state of Texas.
@@ -78,7 +78,7 @@ tm_shape(tex_border) + # Create a map using tmap.
 
 ```
 
-# Convert the data to spatial points patterns (combination of the point data and the bounding window)
+# Convert the data to spatial points patterns (combination of the point data and the bounding window).
 
 ```{r point_pattern}
 
@@ -92,7 +92,31 @@ all_ppp <- ppp(spill_ppp$x, spill_ppp$y, window = tx_owin) # Omits points that d
 
 ```
 
+# A density plot:
 
+```{r density}
+
+plot(density(all_ppp, sigma = 0.4)) # Careful, when you change sigma, the output changes drastically.
+
+```
+
+# Quadrat test for spatial evenness
+
+```{r}
+
+# Are oil spills evenly distributed throughout the state?
+
+oil_qt <- quadrat.test(all_ppp, nx = 5, ny = 5) # nx is 5 horizontal regions, ny is 5 vertical regions.
+oil_qt
+# X2 = 589.36, df = 17, p-value < 2.2e-16
+# Reject the null hypothesis, Retain the alternative hypothesis that the data is NOT CSR, so it is NOT spatially evenly distributed.
+
+plot(all_ppp) # Plots all points as created in previous code chunk.
+plot(oil_qt, add = TRUE, cex = 0.4) # Adds in quadrats and counts.
+
+# Looking at the square full quadrat in the middle: 14.5 = the number of points there should be if the data was truly CSR (notice it's the same to the other complete quadrat to it's right, wherease the quadrat to the left is missing a small chunk so the predicted number of events is 14 instead, if the data was truly evenly distributed). the other full number is the actual number of events (4) and the remaining number at the bottom is the standard deviation between the actual and expected (if CSR) number of events.
+
+```
 
 
 

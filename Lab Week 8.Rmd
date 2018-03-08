@@ -1,0 +1,42 @@
+---
+title: "Lab Week 8"
+author: "Heili Lowman"
+date: "3/8/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load packages.
+
+```{r packages}
+
+library(tidyverse)
+library(sf)
+library(tmap)
+library(leaflet)
+library(spatstat)
+library(maptools)
+
+```
+
+# Column graph of Texas oil spills.
+
+```{r data}
+
+spills <- read_csv("oil_spills.csv") #Load data.
+
+df <- spills %>% 
+  filter(`Accident State`=="TX" & `Accident Year` < 2017) %>%  # Because the name has a space in it it must be bounded by the little backwards apostrophes. This chooses only Texan data before 2017.
+  group_by(`Accident Year`) %>% 
+  summarise(Loss = sum(`Net Loss (Barrels)`))
+
+colnames(df) <- c("Year", "Loss") # Rename columns.  
+
+ggplot(df, aes(x = Year, y = Loss)) +
+  geom_col() # Creates a column graph.
+
+```
+

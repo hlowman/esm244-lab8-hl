@@ -100,9 +100,11 @@ plot(density(all_ppp, sigma = 0.4)) # Careful, when you change sigma, the output
 
 ```
 
-# Quadrat test for spatial evenness
+# CSR Tests for point patterns:
 
-```{r}
+## Quadrat test for spatial evenness
+
+```{r quadrat}
 
 # Are oil spills evenly distributed throughout the state?
 
@@ -118,7 +120,7 @@ plot(oil_qt, add = TRUE, cex = 0.4) # Adds in quadrats and counts.
 
 ```
 
-# G function for Nearest Neighbor Analysis
+## G function for Nearest Neighbor Analysis
 Review all the code below here. This was late in the class and my brain was mushy.
 
 ```{r G_fun}
@@ -136,7 +138,7 @@ ggplot(oil_gfun, aes(x = r, y = obs)) +
 
 ```
 
-# Nearest neighbor using the L-function (Ripley's K, standardized)
+## Nearest neighbor using the L-function (Ripley's K, standardized)
 
 ```{r L_fun}
 

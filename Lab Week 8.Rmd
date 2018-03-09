@@ -118,6 +118,41 @@ plot(oil_qt, add = TRUE, cex = 0.4) # Adds in quadrats and counts.
 
 ```
 
+# G function for Nearest Neighbor Analysis
+Review all the code below here. This was late in the class and my brain was mushy.
+
+```{r G_fun}
+
+r <- seq(0,1, by = 0.01) # Creates a sequence.
+
+oil_gfun <- envelope(all_ppp, fun = Gest, r = r, nsim = 100) # Runs a hundred simulations.
+
+ggplot(oil_gfun, aes(x = r, y = obs)) +
+  geom_line(color = "black") +
+  geom_line(aes(x = r, y = theo), color = "red") +
+  ggtitle("G Function Graph")
+
+# This shows us that our observed data has a higher proportion of point pairs with nearest neighbors at shorter distances compared to CSR (evenly distributed) data.
+
+```
+
+# Nearest neighbor using the L-function (Ripley's K, standardized)
+
+```{r L_fun}
+
+r2 <- seq(0,3, by = 0.5)
+
+oil_lfun <- envelope(all_ppp, fun = Lest, r = r2, nsim = 20, global = TRUE) # This is looking at every single point that has an event and makes increasing bubbles around it until it incorporates all other observations that exist.
+
+# Smaller increments ("by") and more simulations ("nsim") take more processing power but would yielf a smoother curve on the graph below.
+
+ggplot(oil_lfun, aes(x=r2, y=obs)) +
+  geom_line(color = "black") +
+  geom_line(aes(x = r2, y = theo), color = "blue") +
+  ggtitle("L Function Graph")
+
+```
+
 
 
 
